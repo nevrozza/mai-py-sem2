@@ -1,0 +1,1 @@
+JSON_FILE_PATH = "tasks.sample.json" # run from project dir
