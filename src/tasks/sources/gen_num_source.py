@@ -9,7 +9,7 @@ TASK_TAG = "gen.num"
 
 class GenNumberTaskSource:
     """
-    TODO
+    Источник задач, генерирующий случайные числа
     """
 
     def __init__(self, tasks_count: int = 5):

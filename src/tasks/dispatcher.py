@@ -7,7 +7,7 @@ from src.tasks.protocols import TaskSource
 
 class TasksDispatcher:
     """
-    TODO
+    Диспетчер для сбора и обработки задач из различных источников
     """
 
     def __init__(self) -> None:
@@ -15,10 +15,10 @@ class TasksDispatcher:
 
     def register_source(self, source: Any) -> None:
         """
-        TODO
-        :param source:
-        :return:
-        :raises TypeError:
+        Регистрирует источник задач
+
+        :param source: Объект, соответствующий протоколу TaskSource
+        :raises TypeError: Если объект не соответствует протоколу TaskSource
         """
 
         class_name = type(source).__name__
@@ -30,8 +30,8 @@ class TasksDispatcher:
 
     def run_tasks_flow(self) -> Iterable[Task[Any]]:
         """
-        TODO
-        :return:
+        Запускает поток задач из всех зарегистрированных источников
+        :return: Итератор всех задач
         """
         for source in self._sources:
             yield from source.get_tasks()
@@ -39,11 +39,10 @@ class TasksDispatcher:
     def collect(self,
                 action: Callable[[Task[Any]], None]) -> None:
         """
-        TODO
+        Выполняет действие для каждой задачи
 
-        Naming from kotlinx.coroutines =) flow.collect { item -> do smth }
-        :param action:
-        :return:
+        Взято из kotlinx.coroutines: `flow.collect { item -> smth() }`
+        :param action: Функция-обработчик для одной задачи
         """
         for task in self.run_tasks_flow():
             action(task)

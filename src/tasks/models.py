@@ -6,7 +6,10 @@ T = TypeVar("T")
 @dataclass(frozen=True)
 class Task(Generic[T]):
     """
-    TODO
+    Класс, представляющий задачу
+
+    :param id: Айдишник
+    :param payload: Данные
     """
     id: str
     payload: T

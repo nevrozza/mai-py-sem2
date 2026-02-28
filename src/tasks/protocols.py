@@ -8,16 +8,17 @@ T = TypeVar("T")  # , covariant=True
 @runtime_checkable
 class TaskSource(Protocol[T]):
     """
-    TODO
+    Протокол, описывающий источник задач
     """
 
     def get_tasks(self) -> Iterable[Task[T]]:
         """
-        TODO
-        :return:
+        Получает поток задач из источника
+        :return: Итератор задач
         """
         ...
 
-    # mb later??
+    # mb later..
     # def get_tasks_async(self) -> AsyncIterable[Task[T]]:
     #     ...
+

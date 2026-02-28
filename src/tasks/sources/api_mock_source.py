@@ -10,7 +10,9 @@ TASK_TAG = "api.mock"
 
 class APIMockTaskSource:
     """
-    TODO
+    Источник задач, имитирующий API-запрос
+
+    Под капотом используется `GenNumberTaskSource`
     """
 
     def __init__(self, url: str = "ya.ru", tasks_count: int = 5):

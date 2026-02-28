@@ -9,7 +9,7 @@ TASK_TAG = "file"
 
 class FileJSONTaskSource:
     """
-    TODO
+    Источник задач, читающий данные из JSON файла
     """
 
     def __init__(self, json_file_path: str):
