@@ -1,8 +1,8 @@
-from consts import JSON_FILE_PATH
-from tasks.dispatcher import TasksDispatcher
-from tasks.sources.api_mock_source import APIMockTaskSource
-from tasks.sources.file_source import FileJSONTaskSource
-from tasks.sources.gen_num_source import GenNumberTaskSource
+from src.consts import JSON_FILE_PATH
+from src.tasks.dispatcher import TasksDispatcher
+from src.tasks.sources.api_mock_source import APIMockTaskSource
+from src.tasks.sources.file_source import FileJSONTaskSource
+from src.tasks.sources.gen_num_source import GenNumberTaskSource
 
 
 def main() -> None:

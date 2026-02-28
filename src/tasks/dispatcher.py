@@ -1,8 +1,8 @@
 from collections.abc import Callable
 from typing import Any, Iterable
 
-from tasks.models import Task
-from tasks.protocols import TaskSource
+from src.tasks.models import Task
+from src.tasks.protocols import TaskSource
 
 
 class TasksDispatcher:

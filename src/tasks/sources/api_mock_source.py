@@ -2,8 +2,8 @@ import random
 import time
 from typing import Iterable
 
-from tasks.models import Task
-from tasks.sources.gen_num_source import GenNumberTaskSource
+from src.tasks.models import Task
+from src.tasks.sources.gen_num_source import GenNumberTaskSource
 
 TASK_TAG = "api.mock"
 
