@@ -2,7 +2,7 @@ from collections.abc import Callable
 from typing import Any, Iterable
 
 from tasks.models import Task
-from tasks.sources.protocol import TaskSource
+from tasks.protocols import TaskSource
 
 
 class TasksDispatcher:
