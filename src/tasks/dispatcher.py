@@ -24,7 +24,7 @@ class TasksDispatcher:
         class_name = type(source).__name__
         if isinstance(source, TaskSource):
             self._sources.append(source)
-            print(f"da! Source {class_name} is gucci")
+            # print(f"da! Source {class_name} is gucci")
         else:
             raise TypeError(f"net! Class {class_name} is not TaskSource..")
 

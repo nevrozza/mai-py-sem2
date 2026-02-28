@@ -4,7 +4,7 @@ from typing import Iterable
 from tasks.models import Task
 import random
 
-TASK_TAG = "gen"
+TASK_TAG = "gen.num"
 
 
 class GenNumberTaskSource:

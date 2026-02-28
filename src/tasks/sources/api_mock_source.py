@@ -1,4 +1,5 @@
 import random
+import time
 from typing import Iterable
 
 from tasks.models import Task
@@ -24,3 +25,4 @@ class APIMockTaskSource:
                 "count": random.randint(1, 100)
             }
             yield Task(id=f"{TASK_TAG}_{task.id}", payload=new_payload)
+            time.sleep(0.5)
