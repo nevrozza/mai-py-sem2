@@ -18,6 +18,7 @@ class TasksDispatcher:
         TODO
         :param source:
         :return:
+        :raises TypeError:
         """
 
         class_name = type(source).__name__
@@ -25,7 +26,7 @@ class TasksDispatcher:
             self._sources.append(source)
             print(f"da! Source {class_name} is gucci")
         else:
-            raise TypeError(f"net! Object {class_name} is not TaskSource..")
+            raise TypeError(f"net! Class {class_name} is not TaskSource..")
 
     def run_tasks_flow(self) -> Iterable[Task[Any]]:
         """
