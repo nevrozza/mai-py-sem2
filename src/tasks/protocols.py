@@ -1,6 +1,6 @@
 from typing import TypeVar, Protocol, Iterable, runtime_checkable
 
-from src.tasks.models import Task
+from src.tasks.models.models import Task
 
 T = TypeVar("T")  # , covariant=True
 

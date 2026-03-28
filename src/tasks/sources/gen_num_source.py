@@ -2,7 +2,7 @@ import uuid
 from typing import Iterable
 import random
 
-from src.tasks.models import Task
+from src.tasks.models.models import Task
 
 TASK_TAG = "gen.num"
 

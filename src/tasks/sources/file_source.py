@@ -1,6 +1,6 @@
 import json
 
-from src.tasks.models import Task
+from src.tasks.models.models import Task
 
 # TODO: добавить возможность парсить разные типы тасков (serializable?)
 

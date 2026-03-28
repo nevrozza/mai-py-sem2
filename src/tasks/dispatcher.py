@@ -1,7 +1,7 @@
 from collections.abc import Callable
 from typing import Any, Iterable
 
-from src.tasks.models import Task
+from tasks.models.models import Task
 from src.tasks.protocols import TaskSource
 
 

@@ -2,7 +2,7 @@
 
 ## Интересные штучки
   - Используется `Protocol` для определения контракта [`TaskSource`](./src/tasks/protocols.py)
-  - [`Task`](./src/tasks/models.py) и [`TaskSource`](./src/tasks/protocols.py) типизированы (`payload: T`)
+  - [`Task`](./src/tasks/models/models.py) и [`TaskSource`](./src/tasks/protocols.py) типизированы (`payload: T`)
   - [`APIMockTaskSource`](./src/tasks/sources/api_mock_source.py) использует внутри себя [`GenNumberTaskSource`](./src/tasks/sources/gen_num_source.py)
   - Использование `yield` в источниках позволяет получать задачи по требованию, не загружая их все в память (кроме случая с [`FileJSONTaskSource`](./src/tasks/sources/file_source.py))
   - Используется `time.sleep` для имитации задержки API в [`APIMockTaskSource`](./src/tasks/sources/api_mock_source.py)

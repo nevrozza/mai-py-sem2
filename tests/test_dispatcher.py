@@ -1,7 +1,7 @@
 import pytest
 
 from src.tasks.dispatcher import TasksDispatcher
-from src.tasks.models import Task
+from src.tasks.models.models import Task
 
 
 def test_dispatcher_register_and_flow():

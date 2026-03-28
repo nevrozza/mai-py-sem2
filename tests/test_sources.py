@@ -1,5 +1,5 @@
 import json
-from src.tasks.models import Task
+from src.tasks.models.models import Task
 from src.tasks.sources.gen_num_source import GenNumberTaskSource
 from src.tasks.sources.file_source import FileJSONTaskSource
 from src.tasks.sources.api_mock_source import APIMockTaskSource
