@@ -32,11 +32,22 @@ class TaskStatusDescriptor:
 
 class ImmutableDescriptor:
     """
-    Non Data Descriptor (неизменяемый типок)
+    `Non` Data Descriptor (неизменяемый типок)
     """
 
+    def __init__(self, object_type, name: str = ""):
+        self.object_type = object_type
+        self.name = name
+
     def __set_name__(self, owner, name):
-        self.name = f"_{name}"
+        if not self.name:
+            self.name = f"_{name}"
 
     def __get__(self, instance, owner):
+        if instance is None:
+            return self
         return getattr(instance, self.name)
+
+    def validate_init(self, value):
+        if not isinstance(value, self.object_type):
+            raise BusinessLogicError(f"`{value}` must be `{self.object_type}`, got {type(value)}")

@@ -32,8 +32,8 @@ class Task(Generic[T]):
     _status: TaskStatus = field(init=False, default=TaskStatus.NEW)  # Валидируем изменение через дескриптор
 
     # -------- Дескрипторы и @property --------
-    id = ImmutableDescriptor()
-    created_at = ImmutableDescriptor()
+    id = ImmutableDescriptor(str)
+    created_at = ImmutableDescriptor(datetime.datetime)
     status = TaskStatusDescriptor()
 
     @property
@@ -51,10 +51,15 @@ class Task(Generic[T]):
         self._priority = priority
 
     def __post_init__(self, id_: str, description_: str, priority_: int):
-        # Ну тут можно менять, ок да
-        self._id = id_
-        self._description = description_
-        self._priority = priority_
+        # ImmutableDescriptor не имеет сеттера, поэтому так.
+        Task.id.validate_init(id_)  # валидация
+        self._id = id_  # присваивание
+
+        if not isinstance(description_, str):  # валидация руками
+            raise ValidationError(f"Description must be str")
+        self._description = description_  # присваивание
+
+        self.priority = priority_  # валидация и присваивание, т.к. есть свой сеттер
 
     @property
     def is_ready_to_work(self) -> bool:
@@ -65,6 +70,3 @@ class Task(Generic[T]):
     def created_at_iso(self) -> str:
         """Вычисляемое свойство: время создания в ISO формате"""
         return self._created_at.isoformat()
-
-
-x = Task(id_="123", payload="", priority_=10, description_="sex")
