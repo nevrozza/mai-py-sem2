@@ -26,5 +26,6 @@ class APIMockTaskSource:
                 "item_id": task.payload,
                 "count": random.randint(1, 100)
             }
-            yield Task(id=f"{TASK_TAG}_{task.id}", payload=new_payload)
+            yield Task(id_=f"{TASK_TAG}_{task.id}", payload=new_payload, description_="ApiMockTask",
+                       priority_=random.randint(1, 100))
             time.sleep(0.5)

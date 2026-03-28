@@ -1,4 +1,5 @@
 import json
+import random
 
 from src.tasks.models.models import Task
 
@@ -22,6 +23,7 @@ class FileJSONTaskSource:
 
         tasks = []
         for item in data:
-            tasks.append(Task(id=f"{TASK_TAG}_{item['id']}", payload=item['payload']))
+            tasks.append(Task(id_=f"{TASK_TAG}_{item['id']}", payload=item['payload'], description_="JSONFileTask",
+                              priority_=random.randint(1, 100)))
 
         return tasks
