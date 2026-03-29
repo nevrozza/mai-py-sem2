@@ -20,12 +20,12 @@ class Task(Generic[T]):
     # -------- DataClass init --------
     # (Только в payload нет дескриптора или property, поэтому он без InitVar, а также его нет в __post_init__)
     id_: InitVar[str]
-    payload: T
+    payload: T # Пока ещё мутабельно!
     description_: InitVar[str]
     priority_: InitVar[int]
 
     # -------- Internal, используется для хранения +генерируются slots --------
-    _id: str = field(init=False)
+    _id: str = field(init=False) # Защищаем изменение через дескриптор
     _description: str = field(init=False)  # Защищаем изменение через @property (полный запрет изменений)
     _priority: int = field(init=False)  # Валидируем изменение через @property
     _created_at: datetime.datetime = field(init=False, default_factory=datetime.datetime.now,

@@ -12,9 +12,10 @@ def test_dispatcher_register_and_flow():
     count = 5
 
     class TestSource:
-        def get_tasks(self):
+        @staticmethod
+        def get_tasks():
             for i in range(count):
-                yield Task(id=test_id, payload=payload)
+                yield Task(id_=test_id, payload=payload, description_="test_description", priority_=10)
 
     source = TestSource()
     dispatcher.register_source(source)
