@@ -5,6 +5,7 @@ from typing import TypeVar, Generic
 from src.tasks.models.descriptors import ImmutableDescriptor, TaskStatusDescriptor
 from src.tasks.models.utils import TaskStatus
 from src.tasks.exceptions import ValidationError
+from tasks.models.utils import validate
 
 T = TypeVar("T")
 
@@ -47,7 +48,7 @@ class Task(Generic[T]):
     @priority.setter
     def priority(self, priority: int) -> None:
         if not isinstance(priority, int) or not (0 <= priority <= 100):
-            raise ValidationError(f"Priority must be int [0-100], got {priority}")
+            raise ValidationError(f"Priority must be int [0-100], got {type(priority).__name__}: {priority}")
         self._priority = priority
 
     def __post_init__(self, id_: str, description_: str, priority_: int):
@@ -55,8 +56,7 @@ class Task(Generic[T]):
         Task.id.validate_init(id_)  # валидация
         self._id = id_  # присваивание
 
-        if not isinstance(description_, str):  # валидация руками
-            raise ValidationError(f"Description must be str")
+        validate(description_, str, "_description")  # валидация руками
         self._description = description_  # присваивание
 
         self.priority = priority_  # валидация и присваивание, т.к. есть свой сеттер

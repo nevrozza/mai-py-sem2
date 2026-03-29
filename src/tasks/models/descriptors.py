@@ -1,5 +1,5 @@
 from src.tasks.exceptions import ValidationError, BusinessLogicError
-from src.tasks.models.utils import TaskStatus
+from src.tasks.models.utils import TaskStatus, validate
 
 
 class TaskStatusDescriptor:
@@ -19,8 +19,7 @@ class TaskStatusDescriptor:
         return getattr(instance, self.name)
 
     def __set__(self, instance, value: TaskStatus):
-        if not isinstance(value, TaskStatus):
-            raise BusinessLogicError(f"Status of task must be `TaskStatus`, got {type(value)}")
+        validate(value, TaskStatus, self.name)
 
         current_status = self.__get__(instance, instance.__class__)
 
@@ -49,5 +48,4 @@ class ImmutableDescriptor:
         return getattr(instance, self.name)
 
     def validate_init(self, value):
-        if not isinstance(value, self.object_type):
-            raise BusinessLogicError(f"`{value}` must be `{self.object_type}`, got {type(value)}")
+        validate(value, self.object_type, self.name)

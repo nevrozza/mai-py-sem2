@@ -1,10 +1,18 @@
 from enum import Enum
 
+from src.tasks.exceptions import ValidationError
+
 
 class TaskStatus(Enum):
     NEW = "NEW"
     IN_PROGRESS = "IN_PROGRESS"
     DONE = "DONE"
+
+
+def validate(value, need_to_be_type, attribute: str):
+    if not isinstance(value, need_to_be_type):
+        raise ValidationError(f"{attribute} must be {need_to_be_type.__name__}, got {type(value).__name__}: {value}")
+
 
 def print_task_card(t):
     """
@@ -22,9 +30,9 @@ def print_task_card(t):
     max_len = max(len(line) for line in lines)
     width = max_len
 
-    border_top = "┌" + "─" * (width+2) + "┐"
-    border_mid = "├" + "─" * (width+2) + "┤"
-    border_bot = "└" + "─" * (width+2) + "┘"
+    border_top = "┌" + "─" * (width + 2) + "┐"
+    border_mid = "├" + "─" * (width + 2) + "┤"
+    border_bot = "└" + "─" * (width + 2) + "┘"
 
     print(border_top)
 
