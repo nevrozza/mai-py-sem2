@@ -1,4 +1,4 @@
-from src.tasks.exceptions import ValidationError, BusinessLogicError
+from src.tasks.exceptions import BusinessLogicError
 from src.tasks.models.utils import TaskStatus, validate
 
 
@@ -23,7 +23,7 @@ class TaskStatusDescriptor:
 
         current_status = self.__get__(instance, instance.__class__)
 
-        if current_status not in TaskStatusDescriptor.allowed_transitions[current_status]:
+        if value not in TaskStatusDescriptor.allowed_transitions[current_status]:
             raise BusinessLogicError(
                 f"Change order: NEW -> IN_PROGRESS -> DONE, but your: {current_status} -> {value}")
         setattr(instance, self.name, value)
