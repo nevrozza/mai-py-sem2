@@ -1,5 +1,5 @@
 from src.tasks.exceptions import BusinessLogicError
-from src.tasks.models.utils import TaskStatus, validate
+from src.tasks.models.utils import TaskStatus, validate_type, validate_not_empty
 
 
 class TaskStatusDescriptor:
@@ -19,7 +19,7 @@ class TaskStatusDescriptor:
         return getattr(instance, self.name)
 
     def __set__(self, instance, value: TaskStatus):
-        validate(value, TaskStatus, self.name)
+        validate_type(value, TaskStatus, self.name)
 
         current_status = self.__get__(instance, instance.__class__)
 
@@ -32,9 +32,14 @@ class TaskStatusDescriptor:
 class ImmutableDescriptor:
     """
     `Non` Data Descriptor (неизменяемый типок)
+
+    :param object_type: Тип данных (для валидации)
+    :param name: Название _переменной, где будет храниться само значение, если передать пустую строку, то будет _"название переменной"
+    :param allow_empty: Проверка на пустоту при валидации (Например, не принимаются пустые строки)
     """
 
-    def __init__(self, object_type, name: str = ""):
+    def __init__(self, object_type, name: str = "", allow_empty: bool = True):
+        self.allow_empty = allow_empty
         self.object_type = object_type
         self.name = name
 
@@ -48,4 +53,6 @@ class ImmutableDescriptor:
         return getattr(instance, self.name)
 
     def validate_init(self, value):
-        validate(value, self.object_type, self.name)
+        validate_type(value, self.object_type, self.name)
+        if not self.allow_empty:
+            validate_not_empty(value, self.name)

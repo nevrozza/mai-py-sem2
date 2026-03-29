@@ -9,9 +9,23 @@ class TaskStatus(Enum):
     DONE = "DONE"
 
 
-def validate(value, need_to_be_type, attribute: str):
+def validate_type(value, need_to_be_type, attribute_name: str):
+    if hasattr(need_to_be_type, "__args__"):  # Для Union
+        type_names = f"[{", ".join(t.__name__ for t in need_to_be_type.__args__)}]"
+    elif isinstance(need_to_be_type, tuple):  # Для Tuple
+        type_names = f"({", ".join(t.__name__ for t in need_to_be_type)})"
+    else:
+        type_names = need_to_be_type.__name__
+
     if not isinstance(value, need_to_be_type):
-        raise ValidationError(f"{attribute} must be {need_to_be_type.__name__}, got {type(value).__name__}: {value}")
+        raise ValidationError(
+            f"{attribute_name} must be {type_names}, got {type(value).__name__}: {value}")
+
+
+def validate_not_empty(value, attribute_name: str):
+    # Есть запрет на строки, заполненные пробелами
+    if not value or (isinstance(value, str) and not value.strip()):
+        raise ValidationError(f"{attribute_name} can't be empty")
 
 
 def print_task_card(t):

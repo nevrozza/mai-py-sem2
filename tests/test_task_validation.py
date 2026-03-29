@@ -22,7 +22,7 @@ def test_task_creation_success():
 
     for p in [0, 100]:
         Task(
-            id_="", payload="", description_="", priority_=p
+            id_="not_empty", payload=None, description_=None, priority_=p
         )
 
 
@@ -34,12 +34,27 @@ def test_task_creation_failure():
             description_="Test",
             priority_=50
         )
-    with pytest.raises(ValidationError, match="_description must be str, got int"):
+    with pytest.raises(ValidationError, match="_id can't be empty"):
+        Task(
+            id_="   ",
+            payload="test",
+            description_="Test",
+            priority_=50
+        )
+
+    with pytest.raises(ValidationError, match=r"_description must be \[str, NoneType\]"):
         Task(
             id_="13",
             payload="test",
             description_=13,
             priority_=50
+        )
+    with pytest.raises(ValidationError, match="Priority must be int"):
+        Task(
+            id_="13",
+            payload="test",
+            description_="123",
+            priority_=50.5
         )
     with pytest.raises(ValidationError, match="[0-100]"):
         Task(
@@ -60,11 +75,9 @@ def test_task_creation_failure():
 def test_task_validation():
     task = Task("1", "data", "desc", 10)
 
-    with pytest.raises(ValidationError, match="Priority must be int"):
-        task.priority = 150
-
-    with pytest.raises(ValidationError, match="[0-100]"):
-        task.priority = -5
+    for p in [-5, -1, 101, 150]:
+        with pytest.raises(ValidationError, match="[0-100]"):
+            task.priority = p
 
     task.priority = 99
     task.status = TaskStatus.IN_PROGRESS
