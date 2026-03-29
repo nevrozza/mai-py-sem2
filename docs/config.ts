@@ -7,9 +7,14 @@ export const projectStructure = {
                     "file_source.py": "Источник задач, читающий данные из JSON файла – `FileJSONTaskSource`",
                     "gen_num_source.py": "Источник задач, генерирующий случайные числа – `GenNumberTaskSource`"
                 },
+                models: {
+                    "models.py": "Generic `Task` dataclass",
+                    "descriptors.py": "Дескрипторы для `Task`",
+                    "utils.py": "Утилиты для работы с `Task`, валидации, энамчики",
+                },
                 "dispatcher.py": "Диспетчер для сбора и обработки задач – `TasksDispatcher`",
-                "models.py": "Generic `Task` dataclass",
-                "protocols.py": "Протокол `TaskSource`"
+                "protocols.py": "Протокол `TaskSource`",
+                "exceptions.py": "Кастомные ошибки"
             },
             'main.py': 'Входная точка в программу',
             'consts.py': 'Константы: путь к файлу, используемый в `FileJSONTaskSource`'

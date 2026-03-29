@@ -3,6 +3,7 @@ from src.tasks.dispatcher import TasksDispatcher
 from src.tasks.sources.api_mock_source import APIMockTaskSource
 from src.tasks.sources.file_source import FileJSONTaskSource
 from src.tasks.sources.gen_num_source import GenNumberTaskSource
+from src.tasks.models.utils import print_task_card
 
 
 def main() -> None:
@@ -20,7 +21,7 @@ def main() -> None:
         dispatcher.register_source(source)
 
     dispatcher.collect(
-        lambda task: print(f"Processing Task | ID={task.id} | PayloadType={type(task.payload).__name__} | {task.payload}")
+        lambda t: print_task_card(t)
     )
 
 
