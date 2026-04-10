@@ -1,13 +1,15 @@
-from collections.abc import Callable
 from typing import Any, Iterable
 
 from src.tasks.models.models import Task
 from src.tasks.protocols import TaskSource
+from src.tasks.task_queue import TaskQueue
 
 
 class TasksDispatcher:
     """
-    Диспетчер для сбора и обработки задач из различных источников
+    Диспетчер для сбора источников задач
+
+    Работа с задачами происходит через TaskQueue (tasks)
     """
 
     def __init__(self) -> None:
@@ -28,21 +30,21 @@ class TasksDispatcher:
         else:
             raise TypeError(f"net! Class {class_name} is not TaskSource..")
 
-    def run_tasks_flow(self) -> Iterable[Task[Any]]:
+    @property
+    def tasks(self) -> TaskQueue:
         """
-        Запускает поток задач из всех зарегистрированных источников
-        :return: Итератор всех задач
+        Возвращает TaskQueue – ленивую очередь задач
+        Аккуратнее! Данные не кэшируются, а вычисляются заново каждый вызов
+        Если хотите "заплатить памятью" – используйте cached()
         """
-        for source in self._sources:
-            yield from source.get_tasks()
+        def stream_all_tasks() -> Iterable[Task]:
+            for source in self._sources:
+                yield from source.get_tasks()
 
-    def collect(self,
-                action: Callable[[Task[Any]], None]) -> None:
-        """
-        Выполняет действие для каждой задачи
+        return TaskQueue(stream_all_tasks)
 
-        Взято из kotlinx.coroutines: `flow.collect { item -> smth() }`
-        :param action: Функция-обработчик для одной задачи
-        """
-        for task in self.run_tasks_flow():
-            action(task)
+    # def get_tasks_by_source(self, source_type) -> TaskQueue:
+    #     for source in self._sources:
+    #         if isinstance(source, source_type):
+    #             return TaskQueue(source.get_tasks())
+    #     return TaskQueue([])
