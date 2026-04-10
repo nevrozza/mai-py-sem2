@@ -24,7 +24,6 @@
 - В [тестах](./tests/test_queue.py) для [`TaskQueue`](./src/tasks/task_queue.py) показано множество corner-cases, связанных с итерациями
 
 > [!NOTE]
-> \
 > С помощью данной лабораторной работы я смог освоить Test-Driven Development (TDD)
 
 ## Структура проекта
