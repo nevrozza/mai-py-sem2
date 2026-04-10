@@ -20,9 +20,8 @@ def main() -> None:
     for source in sources:
         dispatcher.register_source(source)
 
-    dispatcher.collect(
-        lambda t: print_task_card(t)
-    )
+    for task in dispatcher.tasks:
+        print_task_card(task)
 
 
 if __name__ == "__main__":
