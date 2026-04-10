@@ -94,6 +94,7 @@ def test_taskqueue_filters(tmp_path):
 
     assert len(list(filtered_tasks)) == 2
 
+
 def test_taskqueue_stop_iteration():
     dispatcher = get_random_dispatcher(10)
 
@@ -104,6 +105,11 @@ def test_taskqueue_stop_iteration():
             next(it)
 
 
+def test_taskqueue_persisted():
+    dispatcher = get_random_dispatcher(10)
 
+    persisted = dispatcher.tasks.persisted()
+    it = iter(persisted)
 
-
+    for task in persisted:
+        assert next(it) == task
