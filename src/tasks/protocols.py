@@ -16,7 +16,19 @@ class TaskSource(Protocol[T]):
         Получает поток задач из источника
         :return: Итератор задач
         """
-        ...
+
+
+@runtime_checkable
+class AsyncTaskSource(Protocol[T]):
+    """
+    Протокол, описывающий асинхронный источник задач
+    """
+
+    def get_tasks_async(self) -> AsyncIterable[Task[T]]:
+        """
+        Получает asyncio поток задач из источника
+        :return: Async итератор задач
+        """
 
 
 @runtime_checkable
@@ -28,17 +40,3 @@ class TaskHandler(Protocol):
 
     async def handle(self, task: Task) -> None:
         """Обработать одну задачу."""
-        ...
-
-# @runtime_checkable
-# class AsyncTaskSource(Protocol[T]):
-#     """
-#     Протокол, описывающий асинхронный источник задач
-#     """
-#
-#     def get_tasks_async(self) -> AsyncIterable[Task[T]]:
-#         """
-#         Получает asyncio поток задач из источника
-#         :return: Async итератор задач
-#         """
-#         ...

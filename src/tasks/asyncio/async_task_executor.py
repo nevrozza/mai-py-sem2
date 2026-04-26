@@ -60,7 +60,7 @@ class AsyncTaskExecutor:
 
         try:
             if not handler:
-                raise ExecutorError(f"Handler for '{task_key}' not registered")
+                raise ExecutorError(f"Handler for '{task_key}' or fallback is not registered")
 
             print(task)
             await handler.handle(task)
@@ -80,6 +80,16 @@ class AsyncTaskExecutor:
                 break
             await self._process_task(task, worker_id)
             self._queue.task_done()
+
+    async def wait_all(self) -> None:
+        """Дожидается выполнения всех задач, которые сейчас есть в очереди"""
+        if self._queue:
+            await self._queue.join()
+
+    @property
+    def errors(self) -> list[TaskProcessingError]:
+        """Ошибки, возникшие при обработке задач"""
+        return list(self._errors)
 
     async def __aenter__(self) -> AsyncTaskExecutor:
         self._queue = asyncio.Queue()

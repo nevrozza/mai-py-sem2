@@ -1,22 +1,52 @@
 import asyncio
+import time
 
 from src.tasks.asyncio.async_task_executor import AsyncTaskExecutor
 from src.tasks.asyncio.mock_handler import MockHandler
 from src.tasks.sources.gen_num_source import GenNumberTaskSource
+from src.tasks.sources.async_api_mock_source import AsyncAPIMockTaskSource
+from src.tasks.sources.api_mock_source import APIMockTaskSource
+
+
+async def run_test_case(name: str, executor: AsyncTaskExecutor, source_iter):
+    print("\n", '-' * 20, name, '-' * 20)
+    start_time = time.perf_counter()
+
+    if hasattr(source_iter, '__aiter__'):
+        async for task in source_iter:
+            await executor.submit(task)
+    else:
+        for task in source_iter:
+            await executor.submit(task)
+
+    await executor.wait_all()
+    end_time = time.perf_counter()
+    print(f"[{name}] Completed in {end_time - start_time:.2f} seconds")
 
 
 async def main() -> None:
     executor = AsyncTaskExecutor(workers_count=2)
 
-    executor.register_default_handler(MockHandler())
-
     async with executor:
+        await run_test_case("ERRORED SYNC", executor,
+                            GenNumberTaskSource(tasks_count=3).get_tasks())
 
-        # sync
-        sync_source = GenNumberTaskSource(tasks_count=3)
-        for task in sync_source.get_tasks():
-            await executor.submit(task)
+        executor.register_default_handler(MockHandler())
+        await run_test_case("SYNC (Default Handler)", executor,
+                            GenNumberTaskSource(tasks_count=3).get_tasks())
 
+        sync_api_source = APIMockTaskSource(tasks_count=3)
+        await run_test_case("BLOCKING (time.sleep)", executor,
+                            sync_api_source.get_tasks())
+
+        async_source = AsyncAPIMockTaskSource(tasks_count=3)
+        await run_test_case("NON-BLOCKING (asyncio.sleep)", executor,
+                            async_source.get_tasks_async())
+
+
+    print(f"\nFINAL REPORT: Processed with {len(executor.errors)} errors")
+    for err in executor.errors:
+        print(f"| {err}")
 
 
 if __name__ == "__main__":
