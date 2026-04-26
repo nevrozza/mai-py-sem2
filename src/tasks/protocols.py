@@ -32,7 +32,7 @@ class AsyncTaskSource(Protocol[T]):
 
 
 @runtime_checkable
-class TaskHandler(Protocol):
+class AsyncTaskHandler(Protocol):
     """Контракт обработчика задачи.
 
     Любой объект с методом handle() совместим с этим контрактом.

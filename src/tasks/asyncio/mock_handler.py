@@ -4,7 +4,7 @@ from src.tasks.models.models import Task
 from src.tasks.models.utils import TaskStatus
 
 
-class MockHandler:
+class MockAsyncHandler:
     """Моковый-обработчик для неизвестных типов задач: просто меняет status задачи с delay"""
 
     async def handle(self, task: Task, delay: float = 0.15) -> None:

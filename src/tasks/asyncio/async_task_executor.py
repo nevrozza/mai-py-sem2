@@ -2,7 +2,7 @@ import asyncio
 import logging
 
 from src.tasks.models.models import Task
-from src.tasks.protocols import TaskHandler
+from src.tasks.protocols import AsyncTaskHandler
 from src.tasks.exceptions import TaskProcessingError, ExecutorNotStartedError, ExecutorError
 from src.tasks.models.utils import cut_id
 
@@ -12,7 +12,7 @@ logger = logging.getLogger("AsyncTaskExecutor")
 class AsyncTaskExecutor:
     """
         Асинхронный исполнитель задач с пулом воркеров.
-        Используется как контекстный менеджер для безопасного запуска и остановки.
+        Используется как контекстный менеджер для безопасного запуска и остановки
     """
 
     def __init__(self, workers_count: int = 2):
@@ -20,32 +20,32 @@ class AsyncTaskExecutor:
         self._workers_count = workers_count
         self._workers_tasks: list[asyncio.Task] = []
         self._running = False
-        self._handlers: dict[str, TaskHandler] = {}
-        self._default_handler: TaskHandler | None = None
+        self._handlers: dict[str, AsyncTaskHandler] = {}
+        self._default_handler: AsyncTaskHandler | None = None
         self._errors: list[TaskProcessingError] = []
 
-    def register_handler(self, task_type: str, handler: TaskHandler) -> None:
+    def register_handler(self, task_type: str, handler: AsyncTaskHandler) -> None:
         """
         Регистрирует обработчик для конкретного типа задач (по task_type)
 
-        :raises TypeError: Если handler не реализует TaskHandler.
+        :raises TypeError: Если handler не реализует AsyncTaskHandler.
 
         """
 
-        if not isinstance(handler, TaskHandler):
-            raise TypeError(f"Handler {handler!r} must implement TaskHandler protocol")
+        if not isinstance(handler, AsyncTaskHandler):
+            raise TypeError(f"Handler {handler!r} must implement AsyncTaskHandler protocol")
 
         self._handlers[task_type] = handler
         logger.info(f"Registered handler for {task_type}")
 
-    def register_default_handler(self, handler: TaskHandler) -> None:
+    def register_default_handler(self, handler: AsyncTaskHandler) -> None:
         """
         Регистрирует fallback обработчик для задач
-        :raises TypeError: Если handler не реализует TaskHandler.
+        :raises TypeError: Если handler не реализует AsyncTaskHandler.
         """
 
-        if not isinstance(handler, TaskHandler):
-            raise TypeError(f"Handler {handler!r} must implement TaskHandler protocol")
+        if not isinstance(handler, AsyncTaskHandler):
+            raise TypeError(f"Handler {handler!r} must implement AsyncTaskHandler protocol")
 
         self._default_handler = handler
         logger.debug(f"Registered default handler")
