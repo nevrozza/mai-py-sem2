@@ -1,16 +1,16 @@
+import asyncio
 import random
-import time
-from typing import Iterable
+from typing import AsyncIterable
 
 from src.tasks.models.models import Task
 from src.tasks.sources.gen_num_source import GenNumberTaskSource
 
-TASK_TAG = "api.mock"
+TASK_TAG = "async.api.mock"
 
 
-class APIMockTaskSource:
+class AsyncAPIMockTaskSource:
     """
-    Источник задач, имитирующий API-запрос
+    Async источник задач, имитирующий API-запрос
 
     Под капотом используется `GenNumberTaskSource`
     """
@@ -19,13 +19,13 @@ class APIMockTaskSource:
         self.url = url
         self.gen_num_source = GenNumberTaskSource(tasks_count=tasks_count)
 
-    def get_tasks(self) -> Iterable[Task[dict]]:
+    async def get_tasks_async(self) -> AsyncIterable[Task[dict]]:
         for task in self.gen_num_source.get_tasks():
             new_payload = {
                 "api_source": self.url,
                 "item_id": task.payload,
                 "count": random.randint(1, 100)
             }
-            yield Task(id_=f"{TASK_TAG}_{task.id}", payload=new_payload, description_="ApiMockTask",
-                       priority_=random.randint(1, 100), task_type="ApiMock")
-            time.sleep(0.5)
+            yield Task(id_=f"{TASK_TAG}_{task.id}", payload=new_payload, description_="AsyncApiMockTask",
+                       priority_=random.randint(1, 100), task_type="AsyncApiMock")
+            await asyncio.sleep(0.5)

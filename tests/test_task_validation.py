@@ -13,7 +13,7 @@ def test_task_creation_success():
         id_="meow",
         payload="test",
         description_="Test",
-        priority_=50
+        priority_=50, task_type="Test"
     )
     assert task.id == "meow"
     assert task.priority == 50
@@ -22,7 +22,7 @@ def test_task_creation_success():
 
     for p in [0, 100]:
         Task(
-            id_="not_empty", payload=None, description_=None, priority_=p
+            id_="not_empty", payload=None, description_=None, priority_=p, task_type="Test"
         )
 
 
@@ -32,14 +32,14 @@ def test_task_creation_failure():
             id_=13,
             payload="test",
             description_="Test",
-            priority_=50
+            priority_=50, task_type="Test"
         )
     with pytest.raises(ValidationError, match="_id can't be empty"):
         Task(
             id_="   ",
             payload="test",
             description_="Test",
-            priority_=50
+            priority_=50, task_type="Test"
         )
 
     with pytest.raises(ValidationError, match=r"_description must be \[str, NoneType\]"):
@@ -47,33 +47,33 @@ def test_task_creation_failure():
             id_="13",
             payload="test",
             description_=13,
-            priority_=50
+            priority_=50, task_type="Test"
         )
     with pytest.raises(ValidationError, match="Priority must be int"):
         Task(
             id_="13",
             payload="test",
             description_="123",
-            priority_=50.5
+            priority_=50.5, task_type="Test"
         )
     with pytest.raises(ValidationError, match="[0-100]"):
         Task(
             id_="13",
             payload="test",
             description_="123",
-            priority_=150
+            priority_=150, task_type="Test"
         )
     with pytest.raises(ValidationError, match="[0-100]"):
         Task(
             id_="13",
             payload="test",
             description_="123",
-            priority_=-50
+            priority_=-50, task_type="Test"
         )
 
 
 def test_task_validation():
-    task = Task("1", "data", "desc", 10)
+    task = Task("1", "data", "desc", 10, task_type="Test")
 
     for p in [-5, -1, 101, 150]:
         with pytest.raises(ValidationError, match="[0-100]"):
@@ -92,7 +92,7 @@ def test_task_validation():
 
 
 def test_task_immutability():
-    task = Task("1", "data", "desc", 10)
+    task = Task("1", "data", "desc", 10, task_type="Test")
 
     with pytest.raises(AttributeError, match="read-only"):
         task.id = "meow"
