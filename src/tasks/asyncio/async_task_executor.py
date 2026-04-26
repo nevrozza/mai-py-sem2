@@ -17,6 +17,7 @@ class AsyncTaskExecutor:
         self._workers_tasks: list[asyncio.Task] = []
         self._running = False
         self._handlers: dict[str, TaskHandler] = {}
+        self._default_handler: TaskHandler | None = None
         self._errors: list[TaskProcessingError] = []
 
     def register_handler(self, task_type: str, handler: TaskHandler) -> None:
@@ -32,25 +33,38 @@ class AsyncTaskExecutor:
 
         self._handlers[task_type] = handler
 
+    def register_default_handler(self, handler: TaskHandler) -> None:
+        """
+        Регистрирует fallback обработчик для задач
+        :raises TypeError: Если handler не реализует TaskHandler.
+        """
+
+        if not isinstance(handler, TaskHandler):
+            raise TypeError(f"Handler {handler!r} must implement TaskHandler protocol")
+
+        self._default_handler = handler
+
     async def submit(self, task: Task) -> None:
         """Поставить задачу в очередь
 
         :raises ExecutorNotStartedError: Если исполнитель не запущен.
         """
         if not self._running or self._queue is None:
-            raise ExecutorNotStartedError("Executor not started. Use 'async with'")
+            raise ExecutorNotStartedError("Executor not started. Use 'asyncio with'")
         await self._queue.put(task)
 
     async def _process_task(self, task: Task, worker_id: str) -> None:
         """Выбор обработчика и выполнение задачи с перехватом ошибок"""
         task_key = task.task_type
-        handler = self._handlers.get(task_key, None)
+        handler = self._handlers.get(task_key, self._default_handler)
 
         try:
             if not handler:
                 raise ExecutorError(f"Handler for '{task_key}' not registered")
 
+            print(task)
             await handler.handle(task)
+            print(task)
         except Exception as e:
             error = TaskProcessingError(task, e)
             self._errors.append(error)

@@ -38,7 +38,7 @@ class TaskHandler(Protocol):
 #
 #     def get_tasks_async(self) -> AsyncIterable[Task[T]]:
 #         """
-#         Получает async поток задач из источника
+#         Получает asyncio поток задач из источника
 #         :return: Async итератор задач
 #         """
 #         ...

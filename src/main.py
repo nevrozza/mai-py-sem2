@@ -1,28 +1,23 @@
-from src.consts import JSON_FILE_PATH
-from src.tasks.dispatcher import TasksDispatcher
-from src.tasks.sources.api_mock_source import APIMockTaskSource
-from src.tasks.sources.file_source import FileJSONTaskSource
+import asyncio
+
+from src.tasks.asyncio.async_task_executor import AsyncTaskExecutor
+from src.tasks.asyncio.mock_handler import MockHandler
 from src.tasks.sources.gen_num_source import GenNumberTaskSource
-from src.tasks.models.utils import print_task_card
 
 
-def main() -> None:
-    """
-    Демонстрирует работу TasksDispatcher на моковых данных
-    """
-    dispatcher = TasksDispatcher()
-    sources = [
-        APIMockTaskSource(tasks_count=5),
-        FileJSONTaskSource(json_file_path=JSON_FILE_PATH),
-        GenNumberTaskSource(tasks_count=5)
-    ]
+async def main() -> None:
+    executor = AsyncTaskExecutor(workers_count=2)
 
-    for source in sources:
-        dispatcher.register_source(source)
+    executor.register_default_handler(MockHandler())
 
-    for task in dispatcher.tasks:
-        print_task_card(task)
+    async with executor:
+
+        # sync
+        sync_source = GenNumberTaskSource(tasks_count=3)
+        for task in sync_source.get_tasks():
+            await executor.submit(task)
+
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
