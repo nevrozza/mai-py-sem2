@@ -1,8 +1,12 @@
 import asyncio
+import logging
 
 from src.tasks.models.models import Task
 from src.tasks.protocols import TaskHandler
 from src.tasks.exceptions import TaskProcessingError, ExecutorNotStartedError, ExecutorError
+from src.tasks.models.utils import cut_id
+
+logger = logging.getLogger("AsyncTaskExecutor")
 
 
 class AsyncTaskExecutor:
@@ -32,6 +36,7 @@ class AsyncTaskExecutor:
             raise TypeError(f"Handler {handler!r} must implement TaskHandler protocol")
 
         self._handlers[task_type] = handler
+        logger.info(f"Registered handler for {task_type}")
 
     def register_default_handler(self, handler: TaskHandler) -> None:
         """
@@ -43,6 +48,7 @@ class AsyncTaskExecutor:
             raise TypeError(f"Handler {handler!r} must implement TaskHandler protocol")
 
         self._default_handler = handler
+        logger.debug(f"Registered default handler")
 
     async def submit(self, task: Task) -> None:
         """Поставить задачу в очередь
@@ -52,6 +58,7 @@ class AsyncTaskExecutor:
         if not self._running or self._queue is None:
             raise ExecutorNotStartedError("Executor not started. Use 'asyncio with'")
         await self._queue.put(task)
+        logger.info(f"Task {cut_id(task.id)} was submitted")
 
     async def _process_task(self, task: Task, worker_id: str) -> None:
         """Выбор обработчика и выполнение задачи с перехватом ошибок"""
@@ -62,13 +69,13 @@ class AsyncTaskExecutor:
             if not handler:
                 raise ExecutorError(f"Handler for '{task_key}' or fallback is not registered")
 
-            print(task)
+            logger.info(f"[{worker_id}] Starting task {cut_id(task.id)}")
             await handler.handle(task)
-            print(task)
+            logger.info(f"[{worker_id}] Finished task {cut_id(task.id)} (Status: {task.status.value})")
         except Exception as e:
             error = TaskProcessingError(task, e)
             self._errors.append(error)
-            print(f"[{worker_id}] ERROR: {error}")
+            logger.error(f"[{worker_id}] Failed task {cut_id(task.id)}: {e}")
 
     async def _worker_loop(self, worker_id: str) -> None:
         """Цикл worker'а: берёт задачи из очереди и обрабатывает"""
@@ -92,6 +99,7 @@ class AsyncTaskExecutor:
         return list(self._errors)
 
     async def __aenter__(self) -> AsyncTaskExecutor:
+        logger.info(f"Starting executor with {self._workers_count} workers")
         self._queue = asyncio.Queue()
         self._running = True
         self._workers_tasks = [
@@ -101,6 +109,8 @@ class AsyncTaskExecutor:
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> bool:
+        logger.info("Stopping executor and cleaning up workers...")
+
         # Отправляем sentinel для каждого worker'а
         for _ in self._workers_tasks:
             await self._queue.put(None)
@@ -108,4 +118,6 @@ class AsyncTaskExecutor:
         # Ждём завершения всех workers
         await asyncio.gather(*self._workers_tasks, return_exceptions=True)
         self._running = False
+
+        logger.info("Executor stopped.")
         return False

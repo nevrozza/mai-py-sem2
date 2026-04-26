@@ -28,6 +28,11 @@ def validate_not_empty(value, attribute_name: str):
         raise ValidationError(f"{attribute_name} can't be empty")
 
 
+def cut_id(idx: str) -> str:
+    """:return: строку вида {id[:20]+'...'}"""
+    return idx[:20] + "..."
+
+
 def print_task_card(t):
     """
     Печатает красивую карточку задачки

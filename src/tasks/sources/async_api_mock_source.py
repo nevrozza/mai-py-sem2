@@ -5,7 +5,7 @@ from typing import AsyncIterable
 from src.tasks.models.models import Task
 from src.tasks.sources.gen_num_source import GenNumberTaskSource
 
-TASK_TAG = "api.mock"
+TASK_TAG = "async.api.mock"
 
 
 class AsyncAPIMockTaskSource:
