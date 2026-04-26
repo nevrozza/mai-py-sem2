@@ -16,6 +16,8 @@ class AsyncTaskExecutor:
     """
 
     def __init__(self, workers_count: int = 2):
+        if workers_count < 1:
+            raise ExecutorError("Executor must be started with at least one worker")
         self._queue: asyncio.Queue[Task | None] | None = None
         self._workers_count = workers_count
         self._workers_tasks: list[asyncio.Task] = []
@@ -73,7 +75,7 @@ class AsyncTaskExecutor:
             await handler.handle(task)
             logger.info(f"[{worker_id}] Finished task {cut_id(task.id)} (Status: {task.status.value})")
         except Exception as e:
-            error = TaskProcessingError(task, e)
+            error = TaskProcessingError(task.id, e)
             self._errors.append(error)
             logger.error(f"[{worker_id}] Failed task {cut_id(task.id)}: {e}")
 

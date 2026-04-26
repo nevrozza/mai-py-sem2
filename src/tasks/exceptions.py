@@ -9,8 +9,13 @@ class ValidationError(TaskError):
 class TaskProcessingError(TaskError):
     """Ошибка при обработке конкретной задачи"""
 
+    def __init__(self, task_id: str, cause: Exception):
+        self.task_id = task_id
+        self.cause = cause
+        super().__init__(f"[{task_id}] {cause}")
 
-class BusinessLogicError(TaskProcessingError):
+
+class BusinessLogicError(TaskError):
     """Ошибка нарушения правил логики задачи"""
 
 
