@@ -3,8 +3,8 @@ export const projectStructure = {
   src: {
             tasks: {
                 asyncio: {
-                    "async_task_executor": "Асинхронный исполнитель задач – AsyncTaskExecutor",
-                    "mock_handler": "Моковый асинхронный обработчик – MockAsyncHandler"
+                    "async_task_executor.py": "Асинхронный исполнитель задач – AsyncTaskExecutor",
+                    "mock_handler.py": "Моковый асинхронный обработчик – MockAsyncHandler"
                 },
                 sources: {
                     "api_mock_source.py": "Источник задач, имитирующий API-запрос – APIMockTaskSource",
