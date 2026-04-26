@@ -7,7 +7,10 @@ from src.tasks.models.utils import TaskStatus
 class MockAsyncHandler:
     """Моковый-обработчик для неизвестных типов задач: просто меняет status задачи с delay"""
 
-    async def handle(self, task: Task, delay: float = 0.15) -> None:
+    def __init__(self,  delay: float = 0.15):
+        self.delay = delay
+
+    async def handle(self, task: Task) -> None:
         task.status = TaskStatus.IN_PROGRESS
-        await asyncio.sleep(delay)
+        await asyncio.sleep(self.delay)
         task.status = TaskStatus.DONE
