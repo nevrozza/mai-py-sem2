@@ -1,6 +1,6 @@
 import datetime
 from dataclasses import dataclass, InitVar, field
-from typing import TypeVar, Generic
+from typing import TypeVar, Generic, Any
 
 from src.tasks.models.descriptors import ImmutableDescriptor, TaskStatusDescriptor
 from src.tasks.models.utils import TaskStatus
@@ -23,6 +23,7 @@ class Task(Generic[T]):
     payload: T  # Пока ещё мутабельно!
     description_: InitVar[str | None]
     priority_: InitVar[int]
+    task_type: Any
 
     # -------- Internal, используется для хранения +генерируются slots --------
     _id: str = field(init=False)  # Защищаем изменение через дескриптор

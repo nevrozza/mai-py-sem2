@@ -19,4 +19,4 @@ class GenNumberTaskSource:
         for _ in range(self.tasks_count):
             yield Task(id_=f"{TASK_TAG}_{uuid.uuid4()}", payload=random.randint(1, 100),
                        description_="RandomNumberTask",
-                       priority_=random.randint(1, 100))
+                       priority_=random.randint(1, 100), task_type="RandomNumber")

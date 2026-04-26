@@ -24,6 +24,6 @@ class FileJSONTaskSource:
         tasks = []
         for item in data:
             tasks.append(Task(id_=f"{TASK_TAG}_{item['id']}", payload=item['payload'], description_="JSONFileTask",
-                              priority_=random.randint(1, 100)))
+                              priority_=random.randint(1, 100), task_type="JSONFile"))
 
         return tasks

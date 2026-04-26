@@ -1,11 +1,22 @@
 class TaskError(Exception):
     """Базовое исключение системы задач"""
-    pass
+
 
 class ValidationError(TaskError):
     """Ошибка валидации данных (неверный диапазон, etc.)"""
-    pass
 
-class BusinessLogicError(TaskError):
+
+class TaskProcessingError(TaskError):
+    """Ошибка при обработке конкретной задачи"""
+
+
+class BusinessLogicError(TaskProcessingError):
     """Ошибка нарушения правил логики задачи"""
-    pass
+
+
+class ExecutorError(TaskError):
+    """Базовое исключение исполнителя задач"""
+
+
+class ExecutorNotStartedError(ExecutorError):
+    """Попытка использовать исполнитель до запуска"""

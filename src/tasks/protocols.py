@@ -1,4 +1,4 @@
-from typing import TypeVar, Protocol, Iterable, runtime_checkable
+from typing import TypeVar, Protocol, Iterable, runtime_checkable, AsyncIterable
 
 from src.tasks.models.models import Task
 
@@ -18,7 +18,27 @@ class TaskSource(Protocol[T]):
         """
         ...
 
-    # mb later..
-    # def get_tasks_async(self) -> AsyncIterable[Task[T]]:
-    #     ...
 
+@runtime_checkable
+class TaskHandler(Protocol):
+    """Контракт обработчика задачи.
+
+    Любой объект с методом handle() совместим с этим контрактом.
+    """
+
+    async def handle(self, task: Task) -> None:
+        """Обработать одну задачу."""
+        ...
+
+# @runtime_checkable
+# class AsyncTaskSource(Protocol[T]):
+#     """
+#     Протокол, описывающий асинхронный источник задач
+#     """
+#
+#     def get_tasks_async(self) -> AsyncIterable[Task[T]]:
+#         """
+#         Получает async поток задач из источника
+#         :return: Async итератор задач
+#         """
+#         ...
