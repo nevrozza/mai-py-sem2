@@ -35,16 +35,10 @@ class TasksDispatcher:
         """
         Возвращает TaskQueue – ленивую очередь задач
         Аккуратнее! Данные не кэшируются, а вычисляются заново каждый вызов
-        Если хотите "заплатить памятью" – используйте cached()
+        Если хотите "заплатить памятью" – используйте persisted()
         """
         def stream_all_tasks() -> Iterable[Task]:
             for source in self._sources:
                 yield from source.get_tasks()
 
         return TaskQueue(stream_all_tasks)
-
-    # def get_tasks_by_source(self, source_type) -> TaskQueue:
-    #     for source in self._sources:
-    #         if isinstance(source, source_type):
-    #             return TaskQueue(source.get_tasks())
-    #     return TaskQueue([])
